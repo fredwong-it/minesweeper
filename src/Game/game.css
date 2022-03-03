@@ -1,0 +1,32 @@
+.c-game {
+  display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.c-game-status {
+  font-size: 32px;
+  margin: 20px 0px;
+}
+
+.c-game-board {
+  height: 450px;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.c-game-cell {
+  display: inline-block;
+  font-size: 35px;
+  width: 40px;
+  height: 40px;
+  cursor: not-allowed;
+}
+
+.c-game-cell-init {
+  cursor: pointer;
+}
