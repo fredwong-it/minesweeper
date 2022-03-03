@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+
+.c-cell {
+  display: inline-block;
+  font-size: 35px;
+  width: 40px;
+  height: 40px;
+  cursor: not-allowed;
+}
+
+.c-cell-init {
+  cursor: pointer;
+}
