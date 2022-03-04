@@ -1,0 +1,20 @@
+.c-game-cell-options {
+  display: flex;
+  flex-direction: column;
+}
+
+.c-game-cell-options > button {
+  text-transform: capitalize;
+}
+
+.c-game-cell {
+  display: inline-block;
+  font-size: 35px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.c-game-cell-opened {
+  cursor: not-allowed;
+}

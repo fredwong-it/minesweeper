@@ -4,3 +4,8 @@ export const GAME_STATUS = {
   WIN: "Win",
   LOSE: "Lose",
 };
+
+export const CELL = {
+  INIT: "□",
+  FLAG: "🚩",
+};

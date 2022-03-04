@@ -18,15 +18,3 @@
   pointer-events: none;
   opacity: 0.4;
 }
-
-.c-game-cell {
-  display: inline-block;
-  font-size: 35px;
-  width: 40px;
-  height: 40px;
-  cursor: not-allowed;
-}
-
-.c-game-cell-init {
-  cursor: pointer;
-}
