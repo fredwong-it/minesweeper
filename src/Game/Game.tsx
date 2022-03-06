@@ -3,67 +3,30 @@ import { Button, Popover } from "@mui/material";
 import classNames from "classnames";
 import { GAME_STATUS, CELL } from "./game.utils";
 import Cell from "./Cell";
+import {
+  startGameApp,
+  startGame,
+  getMap,
+  openCell,
+  updateMap,
+} from "../redux/actions/game.action";
+import { useSelector, useDispatch } from "react-redux";
 
 import "./game.css";
 
-const client = new WebSocket("wss://hometask.eg1236.com/game1/");
-
 const Game = () => {
-  const [status, setStatus] = React.useState<string>(GAME_STATUS.NOT_START);
-  const [map, setMap] = React.useState<string[][]>([]);
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+  const dispatch = useDispatch();
+  const map = useSelector((state: any) => state.game.map);
+  const status = useSelector((state: any) => state.game.status);
 
   React.useEffect(() => {
-    client.onopen = () => {
-      console.log("connected");
-    };
-
-    client.onmessage = (event) => {
-      const { data } = event;
-
-      if (data.indexOf("map:") > -1) {
-        let newMap = data.split("\n").slice(1);
-        newMap.pop();
-        newMap = newMap.map((o: string) => o.split(""));
-
-        setMap((prevMap) => {
-          if (prevMap.length === 0) {
-            return newMap;
-          } else {
-            for (let y = 0; y < prevMap.length; y++) {
-              for (let x = 0; x < prevMap.length; x++) {
-                if (newMap[y][x] === CELL.INIT) {
-                  newMap[y][x] = prevMap[y][x];
-                }
-              }
-            }
-
-            return newMap;
-          }
-        });
-      } else if (data.indexOf("open: ") > -1) {
-        const result = data.replace("open: ", "");
-
-        if (result === "You lose") {
-          setStatus(GAME_STATUS.LOSE);
-        } else if (result.includes("You win")) {
-          setStatus(GAME_STATUS.WIN);
-        }
-
-        console.log({ result });
-      }
-    };
-
-    //clean up function
-    return () => client.close();
+    dispatch(startGameApp());
   }, []);
 
   const handleStart = () => {
-    setStatus(GAME_STATUS.IN_PROGRESS);
-    setMap([]);
-
-    client.send("new 1");
-    client.send("map");
+    dispatch(startGame());
+    dispatch(getMap());
   };
 
   const handleClick = (event: any) => {
@@ -80,9 +43,8 @@ const Game = () => {
   const handleOpen = () => {
     if (anchorEl) {
       const id = JSON.parse(anchorEl.id);
-
-      client.send(`open ${id.columnIndex} ${id.rowIndex}`);
-      client.send("map");
+      dispatch(openCell(id.rowIndex, id.columnIndex));
+      dispatch(getMap());
 
       handleClose();
     }
@@ -94,7 +56,7 @@ const Game = () => {
       const newMap = [...map];
       newMap[id.rowIndex][id.columnIndex] = CELL.FLAG;
 
-      setMap(newMap);
+      dispatch(updateMap(newMap));
 
       handleClose();
     }
@@ -114,7 +76,7 @@ const Game = () => {
       <div className="c-game-status">Game status: {status}</div>
       <div className={boardClasses} onClick={handleClick}>
         {!!map &&
-          map.map((row, rowIndex: number) => {
+          map.map((row: [], rowIndex: number) => {
             return (
               <div key={rowIndex}>
                 {row.map((column: string, columnIndex: number) => {
