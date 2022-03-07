@@ -5,6 +5,7 @@ export const gameType = {
   UPDATE_MAP: "UPDATE_MAP",
   OPEN_CELL: "OPEN_CELL",
   FLAG_CELL: "FLAG_CELL",
+  UNFLAG_CELL: "UNFLAG_CELL",
   WIN_GAME: "WIN_GAME",
   LOSE_GAME: "LOSE_GAME",
 };

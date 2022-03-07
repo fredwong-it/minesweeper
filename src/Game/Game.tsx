@@ -1,11 +1,11 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Button, Popover, Box } from "@mui/material";
 import {
   GAME_STATUS,
-  CELL,
-  isEndGame,
+  isGameEnd,
   canOpenAndFlag,
-  cloneMap,
+  isInitCell,
+  isFlagCell,
 } from "./game.utils";
 import Cell from "./Cell";
 import {
@@ -13,7 +13,8 @@ import {
   startGame,
   getMap,
   openCell,
-  updateMap,
+  flagCell,
+  unflagCell,
 } from "../redux/actions/game.action";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -51,16 +52,18 @@ const Game = () => {
     }
   };
 
-  const handleFlag = () => {
+  const handleFlagOrUnflag = (flag: boolean) => {
     if (anchorEl) {
       const id = JSON.parse(anchorEl.id);
-      const newMap = cloneMap(map);
-      newMap[id.rowIndex][id.columnIndex] = CELL.FLAG;
 
-      dispatch(updateMap(newMap));
-
-      handleClose();
+      if (flag) {
+        dispatch(flagCell(id.rowIndex, id.columnIndex));
+      } else {
+        dispatch(unflagCell(id.rowIndex, id.columnIndex));
+      }
     }
+
+    handleClose();
   };
 
   const handleClose = () => {
@@ -89,7 +92,7 @@ const Game = () => {
       <Box
         sx={{
           height: "450px",
-          ...(isEndGame(status) && {
+          ...(isGameEnd(status) && {
             pointerEvents: "none",
             opacity: "0.4",
           }),
@@ -129,12 +132,27 @@ const Game = () => {
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "column" }}>
-          <Button sx={{ textTransform: "capitalize" }} onClick={handleOpen}>
-            Open
-          </Button>
-          <Button sx={{ textTransform: "capitalize" }} onClick={handleFlag}>
-            Flag
-          </Button>
+          {isInitCell(map, anchorEl) && (
+            <Fragment>
+              <Button sx={{ textTransform: "capitalize" }} onClick={handleOpen}>
+                Open
+              </Button>
+              <Button
+                sx={{ textTransform: "capitalize" }}
+                onClick={() => handleFlagOrUnflag(true)}
+              >
+                Flag
+              </Button>
+            </Fragment>
+          )}
+          {isFlagCell(map, anchorEl) && (
+            <Button
+              sx={{ textTransform: "capitalize" }}
+              onClick={() => handleFlagOrUnflag(false)}
+            >
+              Unflag
+            </Button>
+          )}
         </Box>
       </Popover>
     </Box>

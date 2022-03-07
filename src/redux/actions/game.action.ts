@@ -27,6 +27,26 @@ export function updateMap(map: string[][]) {
   };
 }
 
+export function flagCell(rowIndex: number, columnIndex: number) {
+  return {
+    type: gameType.FLAG_CELL,
+    payload: {
+      rowIndex,
+      columnIndex,
+    },
+  };
+}
+
+export function unflagCell(rowIndex: number, columnIndex: number) {
+  return {
+    type: gameType.UNFLAG_CELL,
+    payload: {
+      rowIndex,
+      columnIndex,
+    },
+  };
+}
+
 export function openCell(rowIndex: number, columnIndex: number) {
   return {
     type: gameType.OPEN_CELL,
