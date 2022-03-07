@@ -20,7 +20,7 @@ export function getMap() {
 
 export function updateMap(map: string[][]) {
   return {
-    type: gameType.GET_MAP,
+    type: gameType.UPDATE_MAP,
     payload: {
       map,
     },

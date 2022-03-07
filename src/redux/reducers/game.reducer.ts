@@ -1,9 +1,9 @@
 import { gameType } from "../types";
 import { Action, GameState } from "../interface";
-import { GAME_STATUS, CELL } from "../../Game/game.utils";
+import { GAME_STATUS, cloneMap, updateNewMap } from "../../Game/game.utils";
 
 const initialState: GameState = {
-  status: "",
+  status: GAME_STATUS.NOT_START,
   map: [],
 };
 
@@ -19,21 +19,11 @@ export default function game(state: GameState = initialState, action: Action) {
       };
     case gameType.UPDATE_MAP:
       const { map } = state;
-      const newMap = payload.map;
-
-      if (map.length > 0) {
-        for (let y = 0; y < map.length; y++) {
-          for (let x = 0; x < map.length; x++) {
-            if (newMap[y][x] === CELL.INIT) {
-              newMap[y][x] = map[y][x];
-            }
-          }
-        }
-      }
+      const newMap = updateNewMap(map, payload.map);
 
       return {
         ...state,
-        map: newMap,
+        map: cloneMap(newMap),
       };
     case gameType.WIN_GAME:
       return {

@@ -1,6 +1,12 @@
 import React from "react";
 import { Button, Popover, Box } from "@mui/material";
-import { GAME_STATUS, CELL, isOpenedCell } from "./game.utils";
+import {
+  GAME_STATUS,
+  CELL,
+  isEndGame,
+  canOpenAndFlag,
+  cloneMap,
+} from "./game.utils";
 import Cell from "./Cell";
 import {
   startGameApp,
@@ -30,7 +36,7 @@ const Game = () => {
     const id = JSON.parse(event.target.id);
     const cell = map[id.rowIndex][id.columnIndex];
 
-    if (status === GAME_STATUS.IN_PROGRESS && !isOpenedCell(cell)) {
+    if (canOpenAndFlag(status, cell)) {
       setAnchorEl(event.target);
     }
   };
@@ -48,7 +54,7 @@ const Game = () => {
   const handleFlag = () => {
     if (anchorEl) {
       const id = JSON.parse(anchorEl.id);
-      const newMap = [...map];
+      const newMap = cloneMap(map);
       newMap[id.rowIndex][id.columnIndex] = CELL.FLAG;
 
       dispatch(updateMap(newMap));
@@ -61,11 +67,7 @@ const Game = () => {
     setAnchorEl(null);
   };
 
-  // const boardClasses = classNames("c-game-board", {
-  //   disabled: [GAME_STATUS.WIN, GAME_STATUS.LOSE].includes(status),
-  // });
   const open = Boolean(anchorEl);
-  const isEndGame = status === GAME_STATUS.WIN || status === GAME_STATUS.LOSE;
 
   return (
     <Box
@@ -87,7 +89,7 @@ const Game = () => {
       <Box
         sx={{
           height: "450px",
-          ...(isEndGame && {
+          ...(isEndGame(status) && {
             pointerEvents: "none",
             opacity: "0.4",
           }),

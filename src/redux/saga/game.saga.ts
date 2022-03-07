@@ -64,6 +64,7 @@ function createSocketChannel(socket: WebSocket) {
     return unsubscribe;
   });
 }
+
 function* gameSaga() {
   let socket: WebSocket;
   let socketChannel: EventChannel<Action>;
