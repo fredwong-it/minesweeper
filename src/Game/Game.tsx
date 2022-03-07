@@ -1,7 +1,6 @@
 import React from "react";
-import { Button, Popover } from "@mui/material";
-import classNames from "classnames";
-import { GAME_STATUS, CELL } from "./game.utils";
+import { Button, Popover, Box } from "@mui/material";
+import { GAME_STATUS, CELL, isOpenedCell } from "./game.utils";
 import Cell from "./Cell";
 import {
   startGameApp,
@@ -11,8 +10,6 @@ import {
   updateMap,
 } from "../redux/actions/game.action";
 import { useSelector, useDispatch } from "react-redux";
-
-import "./game.css";
 
 const Game = () => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
@@ -31,11 +28,9 @@ const Game = () => {
 
   const handleClick = (event: any) => {
     const id = JSON.parse(event.target.id);
+    const cell = map[id.rowIndex][id.columnIndex];
 
-    if (
-      status === GAME_STATUS.IN_PROGRESS &&
-      [CELL.INIT, CELL.FLAG].includes(map[id.rowIndex][id.columnIndex])
-    ) {
+    if (status === GAME_STATUS.IN_PROGRESS && !isOpenedCell(cell)) {
       setAnchorEl(event.target);
     }
   };
@@ -66,15 +61,39 @@ const Game = () => {
     setAnchorEl(null);
   };
 
-  const boardClasses = classNames("c-game-board", {
-    disabled: [GAME_STATUS.WIN, GAME_STATUS.LOSE].includes(status),
-  });
+  // const boardClasses = classNames("c-game-board", {
+  //   disabled: [GAME_STATUS.WIN, GAME_STATUS.LOSE].includes(status),
+  // });
   const open = Boolean(anchorEl);
+  const isEndGame = status === GAME_STATUS.WIN || status === GAME_STATUS.LOSE;
 
   return (
-    <div className="c-game">
-      <div className="c-game-status">Game status: {status}</div>
-      <div className={boardClasses} onClick={handleClick}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Box
+        sx={{
+          fontSize: "32px",
+          margin: "20px 0px",
+        }}
+      >
+        Game status: {status}
+      </Box>
+      <Box
+        sx={{
+          height: "450px",
+          ...(isEndGame && {
+            pointerEvents: "none",
+            opacity: "0.4",
+          }),
+        }}
+        onClick={handleClick}
+      >
         {!!map &&
           map.map((row: [], rowIndex: number) => {
             return (
@@ -91,7 +110,7 @@ const Game = () => {
               </div>
             );
           })}
-      </div>
+      </Box>
       <Button
         onClick={handleStart}
         disabled={status === GAME_STATUS.IN_PROGRESS}
@@ -107,12 +126,16 @@ const Game = () => {
           horizontal: "left",
         }}
       >
-        <div className="c-game-cell-options">
-          <Button onClick={handleOpen}>Open</Button>
-          <Button onClick={handleFlag}>Flag</Button>
-        </div>
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <Button sx={{ textTransform: "capitalize" }} onClick={handleOpen}>
+            Open
+          </Button>
+          <Button sx={{ textTransform: "capitalize" }} onClick={handleFlag}>
+            Flag
+          </Button>
+        </Box>
       </Popover>
-    </div>
+    </Box>
   );
 };
 

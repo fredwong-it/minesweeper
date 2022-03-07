@@ -1,8 +1,7 @@
 import React, { Fragment } from "react";
 import classNames from "classnames";
-import { CELL } from "./game.utils";
-
-import "./cell.css";
+import { Box } from "@mui/material";
+import { isOpenedCell } from "./game.utils";
 
 interface CellProps {
   id: string;
@@ -11,15 +10,30 @@ interface CellProps {
 }
 
 const Cell = ({ id, key, children }: CellProps) => {
-  const classes = classNames("c-game-cell", {
-    "c-game-cell-opened": ![CELL.INIT, CELL.FLAG].includes(children)
-  });
+  // const classes = classNames("c-game-cell", {
+  //   "c-game-cell-opened": ![CELL.INIT, CELL.FLAG].includes(children),
+  // });
+  //const isOpenedCell = children !== CELL.INIT && children !== CELL.FLAG;
+  const cell = children;
 
   return (
     <Fragment>
-      <span id={id} key={key} className={classes}>
+      <Box
+        id={id}
+        key={key}
+        sx={{
+          display: "inline-block",
+          fontSize: "35px",
+          width: "40px",
+          height: "40px",
+          cursor: "pointer",
+          ...(isOpenedCell(cell) && {
+            cursor: "not-allowed",
+          }),
+        }}
+      >
         {children}
-      </span>
+      </Box>
     </Fragment>
   );
 };

@@ -9,3 +9,7 @@ export const CELL = {
   INIT: "□",
   FLAG: "🚩",
 };
+
+export const isOpenedCell = (cell: string) => {
+  return cell !== CELL.INIT && cell !== CELL.FLAG;
+};
