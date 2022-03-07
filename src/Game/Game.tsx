@@ -4,8 +4,8 @@ import {
   GAME_STATUS,
   isGameEnd,
   canOpenAndFlag,
-  isInitCell,
-  isFlagCell,
+  getCellContent,
+  CELL,
 } from "./game.utils";
 import Cell from "./Cell";
 import {
@@ -71,6 +71,7 @@ const Game = () => {
   };
 
   const open = Boolean(anchorEl);
+  const cellContent = anchorEl ? getCellContent(map, anchorEl.id) : null;
 
   return (
     <Box
@@ -132,7 +133,7 @@ const Game = () => {
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "column" }}>
-          {isInitCell(map, anchorEl) && (
+          {cellContent === CELL.INIT && (
             <Fragment>
               <Button sx={{ textTransform: "capitalize" }} onClick={handleOpen}>
                 Open
@@ -145,7 +146,7 @@ const Game = () => {
               </Button>
             </Fragment>
           )}
-          {isFlagCell(map, anchorEl) && (
+          {cellContent === CELL.FLAG && (
             <Button
               sx={{ textTransform: "capitalize" }}
               onClick={() => handleFlagOrUnflag(false)}

@@ -2,7 +2,6 @@ import { gameType } from "../types";
 import { Action, GameState } from "../interface";
 import {
   GAME_STATUS,
-  cloneMap,
   updateNewMap,
   flagOrUnflagCell,
 } from "../../Game/game.utils";
@@ -29,7 +28,7 @@ export default function game(state: GameState = initialState, action: Action) {
 
       return {
         ...state,
-        map: cloneMap(newMap),
+        map: newMap,
       };
     case gameType.FLAG_CELL:
       newMap = flagOrUnflagCell(
@@ -41,7 +40,7 @@ export default function game(state: GameState = initialState, action: Action) {
 
       return {
         ...state,
-        map: cloneMap(newMap),
+        map: newMap,
       };
     case gameType.UNFLAG_CELL:
       newMap = flagOrUnflagCell(

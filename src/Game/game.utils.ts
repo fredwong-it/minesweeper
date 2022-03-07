@@ -32,7 +32,7 @@ export const updateNewMap = (prevMap: string[][], newMap: string[][]) => {
     }
   }
 
-  return newMap;
+  return cloneMap(newMap);
 };
 
 export const cloneMap = (map: string[][]) =>
@@ -55,26 +55,7 @@ export const flagOrUnflagCell = (
   return newMap;
 };
 
-export const isInitCell = (
-  map: string[][],
-  cellElement: HTMLElement | null
-) => {
-  if (cellElement) {
-    const id = JSON.parse(cellElement.id);
-    return map[id.rowIndex][id.columnIndex] === CELL.INIT;
-  }
-
-  return false;
-};
-
-export const isFlagCell = (
-  map: string[][],
-  cellElement: HTMLElement | null
-) => {
-  if (cellElement) {
-    const id = JSON.parse(cellElement.id);
-    return map[id.rowIndex][id.columnIndex] === CELL.FLAG;
-  }
-
-  return false;
+export const getCellContent = (map: string[][], idStr: string) => {
+  const id = JSON.parse(idStr);
+  return map[id.rowIndex][id.columnIndex];
 };
